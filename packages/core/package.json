@@ -1,0 +1,21 @@
+{
+    "name": "@dev-assistant/core",
+    "version": "0.0.1",
+    "type": "module",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsc",
+        "test": "vitest run"
+    },
+    "dependencies": {
+        "diff-match-patch": "^1.0.5",
+        "prettier": "^3.0.0"
+    },
+    "devDependencies": {
+        "@types/diff-match-patch": "^1.0.36",
+        "@types/prettier": "^3.0.0",
+        "typescript": "^5.0.0",
+        "vitest": "^0.34.0"
+    }
+}
