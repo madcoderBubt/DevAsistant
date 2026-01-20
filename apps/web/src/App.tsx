@@ -3,6 +3,7 @@ import Layout from './components/Layout';
 import FormatterPage from './pages/FormatterPage';
 import DiffPage from './pages/DiffPage';
 import JSONParserPage from './pages/JSONParserPage';
+import UnitConversionPage from './pages/UnitConversionPage';
 
 function App() {
     return (
@@ -13,6 +14,7 @@ function App() {
                     <Route path="formatter" element={<FormatterPage />} />
                     <Route path="diff" element={<DiffPage />} />
                     <Route path="parser" element={<JSONParserPage />} />
+                    <Route path="unit-conversion" element={<UnitConversionPage />} />
                 </Route>
             </Routes>
         </BrowserRouter>

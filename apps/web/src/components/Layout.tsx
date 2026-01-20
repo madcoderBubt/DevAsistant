@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { FileJson, ArrowLeftRight, Code2, Braces } from 'lucide-react';
+import { FileJson, ArrowLeftRight, Code2, Braces, Ruler } from 'lucide-react';
 
 export default function Layout() {
     const location = useLocation();
@@ -8,6 +8,7 @@ export default function Layout() {
         { path: '/formatter', label: 'Formatter', icon: FileJson },
         { path: '/parser', label: 'JSON Parser', icon: Braces },
         { path: '/diff', label: 'Diff Viewer', icon: ArrowLeftRight },
+        { path: '/unit-conversion', label: 'Unit Converter', icon: Ruler },
     ];
 
     return (
@@ -26,8 +27,8 @@ export default function Layout() {
                                 key={item.path}
                                 to={item.path}
                                 className={`flex items-center gap-3 px-4 py-3 rounded-md text-sm font-medium transition-colors ${isActive
-                                        ? 'bg-primary text-primary-foreground'
-                                        : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                                    ? 'bg-primary text-primary-foreground'
+                                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                                     }`}
                             >
                                 <Icon className="w-5 h-5" />

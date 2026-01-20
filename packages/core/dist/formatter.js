@@ -1,4 +1,6 @@
 import * as prettier from 'prettier/standalone';
+import * as parserBabel from 'prettier/plugins/babel';
+import * as parserEstree from 'prettier/plugins/estree';
 import * as parserHtml from 'prettier/plugins/html'; // For XML/HTML
 export function detectInputType(content) {
     const trimmed = content.trim();
@@ -22,12 +24,11 @@ export function detectInputType(content) {
 }
 export async function formatJSON(content) {
     try {
-        let parsed = JSON.parse(content);
-        // If the result is a string (stringified JSON), parse it again
-        if (typeof parsed === 'string') {
-            parsed = JSON.parse(parsed);
-        }
-        return JSON.stringify(parsed, null, 2);
+        return await prettier.format(content, {
+            parser: 'json',
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            plugins: [parserBabel, parserEstree],
+        });
     }
     catch (e) {
         // Fallback for simple cases if prettier fails or just return original with error
