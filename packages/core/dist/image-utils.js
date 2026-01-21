@@ -58,3 +58,12 @@ export const byteCodeToBase64 = (byteCode) => {
         return '';
     }
 };
+/**
+ * Calculates the byte size of a Base64 string
+ */
+export const getBase64Size = (base64) => {
+    if (!base64)
+        return 0;
+    const padding = (base64.match(/=/g) || []).length;
+    return (base64.length * 3) / 4 - padding;
+};

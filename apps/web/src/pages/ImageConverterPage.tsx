@@ -5,7 +5,8 @@ import {
     dataUrlToBase64,
     base64ToByteCode,
     byteCodeToBase64,
-    base64ToDataUrl
+    base64ToDataUrl,
+    getBase64Size
 } from '@dev-assistant/core';
 
 export default function ImageConverterPage() {
@@ -40,6 +41,7 @@ export default function ImageConverterPage() {
         setBase64Value(val);
         setByteCodeValue(base64ToByteCode(val));
         setPreviewUrl(base64ToDataUrl(val, mimeType));
+        setFileSize(getBase64Size(val));
     };
 
     const handleByteCodeChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -48,6 +50,7 @@ export default function ImageConverterPage() {
         const base64 = byteCodeToBase64(val);
         setBase64Value(base64);
         setPreviewUrl(base64ToDataUrl(base64, mimeType));
+        setFileSize(getBase64Size(base64));
     };
 
     const copyToClipboard = (text: string) => {
