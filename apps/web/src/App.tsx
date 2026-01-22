@@ -5,6 +5,7 @@ import DiffPage from './pages/DiffPage';
 import JSONParserPage from './pages/JSONParserPage';
 import UnitConversionPage from './pages/UnitConversionPage';
 import ImageConverterPage from './pages/ImageConverterPage';
+import DataConverterPage from './pages/DataConverterPage';
 
 function App() {
     return (
@@ -17,6 +18,7 @@ function App() {
                     <Route path="parser" element={<JSONParserPage />} />
                     <Route path="unit-conversion" element={<UnitConversionPage />} />
                     <Route path="image-converter" element={<ImageConverterPage />} />
+                    <Route path="data-converter" element={<DataConverterPage />} />
                 </Route>
             </Routes>
         </BrowserRouter>
