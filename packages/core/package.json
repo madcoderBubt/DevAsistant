@@ -10,10 +10,13 @@
     },
     "dependencies": {
         "diff-match-patch": "^1.0.5",
+        "fast-xml-parser": "^5.3.3",
+        "papaparse": "^5.5.3",
         "prettier": "^3.0.0"
     },
     "devDependencies": {
         "@types/diff-match-patch": "^1.0.36",
+        "@types/papaparse": "^5.5.2",
         "@types/prettier": "^3.0.0",
         "typescript": "^5.0.0",
         "vitest": "^0.34.0"
