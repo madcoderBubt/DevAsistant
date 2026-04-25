@@ -10,10 +10,11 @@ describe('analyzeText', () => {
         expect(result.totalCharsWithoutSpaces).toBe(8);
     });
 
-    it('should correctly count numbers', () => {
-        const text = 'Score is 10 to 5';
+    it('should correctly count standalone numbers and decimals', () => {
+        const text = 'Score is 10 to 5.5 and Love4Ever has 0 numbers. -156.54 is one.';
         const result = analyzeText(text);
-        expect(result.numbers).toBe(3); // '1', '0', '5'
+        // Numbers expected: 10, 5.5, 0, -156.54
+        expect(result.numbers).toBe(4);
     });
 
     it('should correctly count words', () => {
@@ -32,6 +33,13 @@ describe('analyzeText', () => {
         const text = 'Para 1\n\nPara 2\n\n\nPara 3';
         const result = analyzeText(text);
         expect(result.paragraphs).toBe(3);
+    });
+
+    it('should correctly count hex and binary numbers', () => {
+        const text = 'Hex: 0x1A and #FF00FF. Binary: 0b1010 and 11010011.';
+        const result = analyzeText(text);
+        expect(result.hexCount).toBe(2);
+        expect(result.binaryCount).toBe(2);
     });
 
     it('should handle empty string', () => {

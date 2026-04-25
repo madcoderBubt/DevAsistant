@@ -8,10 +8,11 @@ describe('analyzeText', () => {
         expect(result.blankSpaces).toBe(1);
         expect(result.totalCharsWithoutSpaces).toBe(8);
     });
-    it('should correctly count numbers', () => {
-        const text = 'Score is 10 to 5';
+    it('should correctly count standalone numbers and decimals', () => {
+        const text = 'Score is 10 to 5.5 and Love4Ever has 0 numbers. -156.54 is one.';
         const result = analyzeText(text);
-        expect(result.numbers).toBe(3); // '1', '0', '5'
+        // Numbers expected: 10, 5.5, 0, -156.54
+        expect(result.numbers).toBe(4);
     });
     it('should correctly count words', () => {
         const text = '  Hello   world  ';

@@ -6,6 +6,8 @@ export interface TextAnalysis {
     words: number;
     sentences: number;
     paragraphs: number;
+    hexCount: number;
+    binaryCount: number;
 }
 /**
  * Analyzes text and returns various counts

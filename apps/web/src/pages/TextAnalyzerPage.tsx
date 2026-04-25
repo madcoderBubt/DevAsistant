@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { analyzeText } from '@dev-assistant/core';
-import { Type, Hash, AlignLeft, FileText, Quote, Hash as HashIcon, MousePointer2 } from 'lucide-react';
+import { Type, AlignLeft, FileText, Quote, Hash as HashIcon, MousePointer2, Binary, Hexagon } from 'lucide-react';
 
 export default function TextAnalyzerPage() {
     const [text, setText] = useState('');
@@ -49,6 +49,18 @@ export default function TextAnalyzerPage() {
             value: stats.numbers,
             icon: <HashIcon className="w-5 h-5 text-rose-500" />,
             description: 'Count of digits (0-9)'
+        },
+        {
+            label: 'Hexadecimal',
+            value: stats.hexCount,
+            icon: <Hexagon className="w-5 h-5 text-orange-500" />,
+            description: 'e.g., 0x1A or #FFFFFF'
+        },
+        {
+            label: 'Binary',
+            value: stats.binaryCount,
+            icon: <Binary className="w-5 h-5 text-lime-500" />,
+            description: 'e.g., 0b1010 or 1101'
         }
     ];
 
