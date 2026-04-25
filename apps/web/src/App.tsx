@@ -6,6 +6,7 @@ import JSONParserPage from './pages/JSONParserPage';
 import UnitConversionPage from './pages/UnitConversionPage';
 import ImageConverterPage from './pages/ImageConverterPage';
 import DataConverterPage from './pages/DataConverterPage';
+import TextAnalyzerPage from './pages/TextAnalyzerPage';
 
 function App() {
     return (
@@ -19,6 +20,7 @@ function App() {
                     <Route path="unit-conversion" element={<UnitConversionPage />} />
                     <Route path="image-converter" element={<ImageConverterPage />} />
                     <Route path="data-converter" element={<DataConverterPage />} />
+                    <Route path="text-analyzer" element={<TextAnalyzerPage />} />
                 </Route>
             </Routes>
         </BrowserRouter>
