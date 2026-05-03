@@ -23,7 +23,7 @@ describe('Data Converter', () => {
             expect(result.data).toBeDefined();
         });
         it('should handle invalid XML', () => {
-            const result = xmlToJson('<invalid>xml');
+            const result = xmlToJson('<<>>invalid<<xml');
             expect(result.success).toBe(false);
             expect(result.error).toBeDefined();
         });

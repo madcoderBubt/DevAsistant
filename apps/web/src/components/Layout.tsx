@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { FileJson, ArrowLeftRight, Code2, Braces, Ruler, Image, Database } from 'lucide-react';
+import { FileJson, ArrowLeftRight, Code2, Braces, Ruler, Image, Database, AlignLeft } from 'lucide-react';
 
 export default function Layout() {
     const location = useLocation();
@@ -11,6 +11,7 @@ export default function Layout() {
         { path: '/unit-conversion', label: 'Unit Converter', icon: Ruler },
         { path: '/image-converter', label: 'Image Converter', icon: Image },
         { path: '/data-converter', label: 'Data Converter', icon: Database },
+        { path: '/text-analyzer', label: 'Text Analyzer', icon: AlignLeft },
     ];
 
     return (
