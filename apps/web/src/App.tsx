@@ -7,6 +7,7 @@ import UnitConversionPage from './pages/UnitConversionPage';
 import ImageConverterPage from './pages/ImageConverterPage';
 import DataConverterPage from './pages/DataConverterPage';
 import TextAnalyzerPage from './pages/TextAnalyzerPage';
+import BCryptPage from './pages/BCryptPage';
 
 function App() {
     return (
@@ -21,6 +22,7 @@ function App() {
                     <Route path="image-converter" element={<ImageConverterPage />} />
                     <Route path="data-converter" element={<DataConverterPage />} />
                     <Route path="text-analyzer" element={<TextAnalyzerPage />} />
+                    <Route path="bcrypt" element={<BCryptPage />} />
                 </Route>
             </Routes>
         </BrowserRouter>

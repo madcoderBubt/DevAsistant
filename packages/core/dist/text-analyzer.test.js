@@ -29,6 +29,12 @@ describe('analyzeText', () => {
         const result = analyzeText(text);
         expect(result.paragraphs).toBe(3);
     });
+    it('should correctly count hex and binary numbers', () => {
+        const text = 'Hex: 0x1A and #FF00FF. Binary: 0b1010 and 11010011.';
+        const result = analyzeText(text);
+        expect(result.hexCount).toBe(2);
+        expect(result.binaryCount).toBe(2);
+    });
     it('should handle empty string', () => {
         const result = analyzeText('');
         expect(result.words).toBe(0);
