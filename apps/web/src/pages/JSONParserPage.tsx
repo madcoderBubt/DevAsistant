@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Editor from '@monaco-editor/react';
 import { parseJSON, stringifyJSON } from '@dev-assistant/core';
 import { Play, Clipboard, Check, RotateCcw } from 'lucide-react';
+import { EditorPanel, ToolPageHeader } from '../components/ToolPage';
 
 export default function JSONParserPage() {
     const [input, setInput] = useState('');
@@ -40,11 +41,10 @@ export default function JSONParserPage() {
     };
 
     return (
-        <div className="flex flex-col h-full gap-4">
-            <div className="flex items-center justifying-between gap-4 py-2">
-                <h2 className="text-2xl font-bold">JSON Parser & Stringifier</h2>
-                <div className="flex items-center gap-2 ml-auto">
-                    <div className="flex gap-2 px-3 py-2 bg-card border border-input rounded-md">
+        <div className="flex min-h-[calc(100vh-8rem)] flex-col gap-6">
+            <ToolPageHeader title="JSON tools" description="Prettify JSON for review or minify it for transport. Validation errors stay close to your input." actions={
+                <>
+                    <div className="flex gap-2 rounded-md border border-input bg-card p-1">
                         <label className="flex items-center gap-2 cursor-pointer text-sm">
                             <input
                                 type="radio"
@@ -52,9 +52,9 @@ export default function JSONParserPage() {
                                 value="parse"
                                 checked={action === 'parse'}
                                 onChange={(e) => setAction(e.target.value as 'parse' | 'stringify')}
-                                className="w-4 h-4 cursor-pointer"
+                                className="sr-only"
                             />
-                            Parse (Prettify)
+                            <span className={`rounded px-2 py-1 ${action === 'parse' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}>Prettify</span>
                         </label>
                         <label className="flex items-center gap-2 cursor-pointer text-sm">
                             <input
@@ -63,29 +63,21 @@ export default function JSONParserPage() {
                                 value="stringify"
                                 checked={action === 'stringify'}
                                 onChange={(e) => setAction(e.target.value as 'parse' | 'stringify')}
-                                className="w-4 h-4 cursor-pointer"
+                                className="sr-only"
                             />
-                            Stringify (Minify)
+                            <span className={`rounded px-2 py-1 ${action === 'stringify' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'}`}>Minify</span>
                         </label>
                     </div>
-                    <button
-                        onClick={handleExecute}
-                        disabled={!input.trim()}
-                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
-                    >
+                    <button onClick={handleExecute} disabled={!input.trim()} className="toolbar-button toolbar-button-primary">
                         <Play className="w-4 h-4" />
-                        Execute
+                        {action === 'parse' ? 'Prettify' : 'Minify'}
                     </button>
-                    <button
-                        onClick={clearAll}
-                        disabled={!input && !output}
-                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-muted text-muted-foreground hover:bg-muted/80 h-10 px-4 py-2"
-                    >
+                    <button onClick={clearAll} disabled={!input && !output} className="toolbar-button">
                         <RotateCcw className="w-4 h-4" />
                         Clear
                     </button>
-                </div>
-            </div>
+                </>
+            } />
 
             {error && (
                 <div className="p-3 rounded-md bg-destructive/10 border border-destructive text-destructive text-sm">
@@ -93,12 +85,8 @@ export default function JSONParserPage() {
                 </div>
             )}
 
-            <div className="grid grid-cols-2 gap-4 flex-1 min-h-0">
-                <div className="flex flex-col gap-2 h-full">
-                    <label className="text-sm font-medium text-muted-foreground">
-                        {action === 'parse' ? 'Input (Minified JSON)' : 'Input (Formatted JSON)'}
-                    </label>
-                    <div className="flex-1 border border-input rounded-md overflow-hidden bg-card">
+            <div className="grid flex-1 min-h-[32rem] grid-cols-1 gap-4 lg:grid-cols-2">
+                <EditorPanel title="Input JSON" subtitle={action === 'parse' ? 'Minified or unformatted JSON' : 'Formatted JSON to minify'}>
                         <Editor
                             height="100%"
                             defaultLanguage="json"
@@ -109,36 +97,29 @@ export default function JSONParserPage() {
                                 setInput(value || '');
                                 setError('');
                             }}
-                            options={{ minimap: { enabled: false }, fontSize: 14 }}
+                            options={{ minimap: { enabled: false }, fontSize: 14, wordWrap: 'on', padding: { top: 16 } }}
                         />
-                    </div>
-                </div>
+                </EditorPanel>
 
-                <div className="flex flex-col gap-2 h-full">
-                    <div className="flex items-center justify-between">
-                        <label className="text-sm font-medium text-muted-foreground">
-                            {action === 'parse' ? 'Output (Prettified JSON)' : 'Output (Minified JSON)'}
-                        </label>
+                <EditorPanel title={action === 'parse' ? 'Prettified JSON' : 'Minified JSON'} subtitle={output ? 'Ready to copy' : 'Your result will appear here'} actions={
                         <button
                             onClick={copyToClipboard}
                             disabled={!output}
-                            className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-xs font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-8 px-3"
+                            className="icon-button"
                         >
                             {copied ? <Check className="w-3 h-3" /> : <Clipboard className="w-3 h-3" />}
                             {copied ? 'Copied' : 'Copy'}
                         </button>
-                    </div>
-                    <div className="flex-1 border border-input rounded-md overflow-hidden bg-card">
+                }>
                         <Editor
                             height="100%"
                             defaultLanguage="json"
                             language="json"
                             theme="vs-dark"
                             value={output}
-                            options={{ readOnly: true, minimap: { enabled: false }, fontSize: 14 }}
+                            options={{ readOnly: true, minimap: { enabled: false }, fontSize: 14, wordWrap: 'on', padding: { top: 16 } }}
                         />
-                    </div>
-                </div>
+                </EditorPanel>
             </div>
         </div>
     );

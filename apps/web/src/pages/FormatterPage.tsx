@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import Editor from '@monaco-editor/react';
 import { formatJSON, formatXML, detectInputType } from '@dev-assistant/core';
-import { Play, Clipboard, Check, Zap } from 'lucide-react';
+import { Play, Clipboard, Check, Zap, RotateCcw } from 'lucide-react';
+import { EditorPanel, ToolPageHeader } from '../components/ToolPage';
 
 export default function FormatterPage() {
     const [input, setInput] = useState('');
@@ -38,11 +39,15 @@ export default function FormatterPage() {
         setTimeout(() => setCopied(false), 2000);
     };
 
+    const clearAll = () => {
+        setInput('');
+        setOutput('');
+    };
+
     return (
-        <div className="flex flex-col h-full gap-4">
-            <div className="flex items-center justifying-between gap-4 py-2">
-                <h2 className="text-2xl font-bold">Code Formatter</h2>
-                <div className="flex items-center gap-2 ml-auto">
+        <div className="flex min-h-[calc(100vh-8rem)] flex-col gap-6">
+            <ToolPageHeader title="Code Formatter" description="Format JSON or XML in your browser. Enable auto-detect to identify the input type for you." actions={
+                <>
                     <label className="flex items-center gap-2 px-3 py-2 bg-card border border-input rounded-md text-sm cursor-pointer hover:bg-accent">
                         <input
                             type="checkbox"
@@ -62,20 +67,18 @@ export default function FormatterPage() {
                         <option value="json">JSON</option>
                         <option value="xml">XML</option>
                     </select>
-                    <button
-                        onClick={handleFormat}
-                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
-                    >
+                    <button onClick={handleFormat} className="toolbar-button toolbar-button-primary">
                         <Play className="w-4 h-4" />
                         Format
                     </button>
-                </div>
-            </div>
+                    <button onClick={clearAll} disabled={!input && !output} className="toolbar-button" title="Clear both editors">
+                        <RotateCcw className="w-4 h-4" /> Clear
+                    </button>
+                </>
+            } />
 
-            <div className="grid grid-cols-2 gap-4 flex-1 min-h-0">
-                <div className="flex flex-col gap-2 h-full">
-                    <label className="text-sm font-medium text-muted-foreground">Input</label>
-                    <div className="flex-1 border border-input rounded-md overflow-hidden bg-card">
+            <div className="grid flex-1 min-h-[32rem] grid-cols-1 gap-4 lg:grid-cols-2">
+                <EditorPanel title="Input" subtitle="Paste JSON or XML to format">
                         <Editor
                             height="100%"
                             defaultLanguage={language}
@@ -83,34 +86,29 @@ export default function FormatterPage() {
                             theme="vs-dark"
                             value={input}
                             onChange={(value) => setInput(value || '')}
-                            options={{ minimap: { enabled: false }, fontSize: 14 }}
+                            options={{ minimap: { enabled: false }, fontSize: 14, wordWrap: 'on', padding: { top: 16 } }}
                         />
-                    </div>
-                </div>
+                </EditorPanel>
 
-                <div className="flex flex-col gap-2 h-full">
-                    <div className="flex items-center justify-between">
-                        <label className="text-sm font-medium text-muted-foreground">Output</label>
+                <EditorPanel title="Formatted output" subtitle={output ? `Detected as ${language.toUpperCase()}` : 'Your formatted result will appear here'} actions={
                         <button
                             onClick={copyToClipboard}
                             disabled={!output}
-                            className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-xs font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-8 px-3"
+                            className="icon-button"
                         >
                             {copied ? <Check className="w-3 h-3" /> : <Clipboard className="w-3 h-3" />}
                             {copied ? 'Copied' : 'Copy'}
                         </button>
-                    </div>
-                    <div className="flex-1 border border-input rounded-md overflow-hidden bg-card">
+                }>
                         <Editor
                             height="100%"
                             defaultLanguage={language}
                             language={language}
                             theme="vs-dark"
                             value={output}
-                            options={{ readOnly: true, minimap: { enabled: false }, fontSize: 14 }}
+                            options={{ readOnly: true, minimap: { enabled: false }, fontSize: 14, wordWrap: 'on', padding: { top: 16 } }}
                         />
-                    </div>
-                </div>
+                </EditorPanel>
             </div>
         </div>
     );

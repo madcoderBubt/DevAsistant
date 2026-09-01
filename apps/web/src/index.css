@@ -4,24 +4,24 @@
 
 @layer base {
   :root {
-    --background: 222.2 84% 4.9%;
+    --background: 222.2 47% 7%;
     --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
+    --card: 222.2 38% 10%;
     --card-foreground: 210 40% 98%;
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
+    --primary: 199 89% 58%;
     --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
+    --secondary: 217.2 28% 16%;
     --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
+    --muted: 217.2 28% 16%;
     --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
+    --accent: 217.2 28% 16%;
     --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
+    --border: 217.2 25% 20%;
+    --input: 217.2 25% 20%;
     --ring: 212.7 26.8% 83.9%;
     --radius: 0.5rem;
   }
@@ -30,5 +30,68 @@
 @layer base {
   body {
     @apply bg-background text-foreground antialiased;
+    min-width: 320px;
+  }
+}
+
+@layer components {
+  .app-surface {
+    background: radial-gradient(circle at top right, hsl(199 89% 58% / 0.12), transparent 32rem), hsl(var(--background));
+  }
+
+  .tool-page-header {
+    @apply flex flex-col gap-5 border-b border-border pb-6 sm:flex-row sm:items-end sm:justify-between;
+  }
+
+  .tool-page-header h2 {
+    @apply mt-1 text-3xl font-bold tracking-tight text-foreground;
+  }
+
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.16em] text-primary;
+  }
+
+  .tool-page-description {
+    @apply mt-2 max-w-2xl text-sm leading-6 text-muted-foreground;
+  }
+
+  .tool-page-actions {
+    @apply flex flex-wrap items-center gap-2;
+  }
+
+  .editor-panel {
+    @apply flex min-h-0 flex-col overflow-hidden rounded-xl border border-border bg-card shadow-sm;
+  }
+
+  .editor-panel-header {
+    @apply flex min-h-[4.25rem] items-center justify-between gap-3 border-b border-border bg-muted/30 px-4 py-3;
+  }
+
+  .editor-panel-header h3 {
+    @apply text-sm font-semibold text-foreground;
+  }
+
+  .editor-panel-header p {
+    @apply mt-0.5 text-xs text-muted-foreground;
+  }
+
+  .editor-panel-actions {
+    @apply flex shrink-0 items-center gap-1;
+  }
+
+  .editor-panel-body {
+    @apply min-h-0 flex-1;
+  }
+
+  .toolbar-button {
+    @apply inline-flex h-10 items-center justify-center gap-2 rounded-md border border-input bg-card px-3 text-sm font-medium text-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .toolbar-button-primary {
+    @apply border-primary bg-primary text-primary-foreground hover:bg-primary/90;
+  }
+
+  .icon-button {
+    @apply inline-flex h-8 items-center justify-center rounded-md px-2 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50;
   }
 }
