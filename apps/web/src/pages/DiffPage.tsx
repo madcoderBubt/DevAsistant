@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import Editor from '@monaco-editor/react';
+import { useState, type ComponentProps } from 'react';
+import { DiffEditor } from '@monaco-editor/react';
 import { computeDiff, DiffResult } from '@dev-assistant/core';
-import { GitCompare } from 'lucide-react';
+import { ArrowLeftRight, GitCompare, RotateCcw } from 'lucide-react';
+import { ToolPageHeader } from '../components/ToolPage';
 
 export default function DiffPage() {
     const [text1, setText1] = useState('');
@@ -13,66 +14,72 @@ export default function DiffPage() {
         setDiffs(result);
     };
 
+    const clearAll = () => {
+        setText1('');
+        setText2('');
+        setDiffs([]);
+    };
+
+    const swapInputs = () => {
+        setText1(text2);
+        setText2(text1);
+        setDiffs([]);
+    };
+
+    const handleDiffMount = (editor: Parameters<NonNullable<ComponentProps<typeof DiffEditor>['onMount']>>[0]) => {
+        const originalModel = editor.getOriginalEditor().getModel();
+        const modifiedModel = editor.getModifiedEditor().getModel();
+
+        originalModel?.onDidChangeContent(() => {
+            setText1(originalModel.getValue());
+            setDiffs([]);
+        });
+        modifiedModel?.onDidChangeContent(() => {
+            setText2(modifiedModel.getValue());
+            setDiffs([]);
+        });
+    };
+
+    const additions = diffs.filter(([type]) => type === 1).reduce((total, [, text]) => total + text.length, 0);
+    const removals = diffs.filter(([type]) => type === -1).reduce((total, [, text]) => total + text.length, 0);
+
     return (
-        <div className="flex flex-col h-full gap-4">
-            <div className="flex items-center justify-between py-2">
-                <h2 className="text-2xl font-bold">Diff Viewer</h2>
-                <button
-                    onClick={handleCompare}
-                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
-                >
+        <div className="flex min-h-[calc(100vh-8rem)] flex-col gap-6">
+            <ToolPageHeader title="Diff Viewer" description="Compare two versions with synchronized scrolling and clear, line-level change markers." actions={
+                <>
+                    <button onClick={swapInputs} className="toolbar-button" title="Swap original and modified text">
+                        <ArrowLeftRight className="w-4 h-4" /> Swap
+                    </button>
+                    <button onClick={handleCompare} disabled={!text1 && !text2} className="toolbar-button toolbar-button-primary">
                     <GitCompare className="w-4 h-4" />
                     Compare
-                </button>
-            </div>
+                    </button>
+                    <button onClick={clearAll} disabled={!text1 && !text2} className="toolbar-button" title="Clear both versions">
+                        <RotateCcw className="w-4 h-4" /> Clear
+                    </button>
+                </>
+            } />
 
-            <div className="grid grid-cols-2 gap-4 h-[40%]">
-                <div className="flex flex-col gap-2">
-                    <label className="text-sm font-medium text-muted-foreground">Original Text</label>
-                    <div className="flex-1 border border-input rounded-md overflow-hidden bg-card">
-                        <Editor
-                            height="100%"
-                            defaultLanguage="text"
-                            theme="vs-dark"
-                            value={text1}
-                            onChange={(value) => setText1(value || '')}
-                            options={{ minimap: { enabled: false }, fontSize: 14 }}
-                        />
+            <section className="editor-panel h-[34rem] min-h-[34rem] lg:h-[calc(100vh-18rem)] lg:min-h-[38rem]">
+                <div className="editor-panel-header">
+                    <div>
+                        <h3>Comparison workspace</h3>
+                        <p>{diffs.length ? `${additions} added characters · ${removals} removed characters` : 'Add two versions, then compare them'}</p>
                     </div>
+                    {diffs.length > 0 && <span className="rounded-full bg-primary/15 px-3 py-1 text-xs font-medium text-primary">Changes found</span>}
                 </div>
-                <div className="flex flex-col gap-2">
-                    <label className="text-sm font-medium text-muted-foreground">Modified Text</label>
-                    <div className="flex-1 border border-input rounded-md overflow-hidden bg-card">
-                        <Editor
-                            height="100%"
-                            defaultLanguage="text"
-                            theme="vs-dark"
-                            value={text2}
-                            onChange={(value) => setText2(value || '')}
-                            options={{ minimap: { enabled: false }, fontSize: 14 }}
-                        />
-                    </div>
+                <div className="editor-panel-body">
+                    <DiffEditor
+                        height="100%"
+                        theme="vs-dark"
+                        original={text1}
+                        modified={text2}
+                        language="text"
+                        onMount={handleDiffMount}
+                        options={{ renderSideBySide: true, readOnly: false, minimap: { enabled: false }, fontSize: 14, wordWrap: 'on', originalEditable: true, padding: { top: 16 } }}
+                    />
                 </div>
-            </div>
-
-            <div className="flex flex-col gap-2 flex-1 min-h-0">
-                <label className="text-sm font-medium text-muted-foreground">Diff Result</label>
-                <div className="flex-1 p-4 border border-input rounded-md bg-card overflow-auto font-mono text-sm whitespace-pre-wrap">
-                    {diffs.map((diff, index) => {
-                        const [type, text] = diff;
-                        let className = '';
-                        if (type === 1) className = 'bg-green-900/30 text-green-300';
-                        if (type === -1) className = 'bg-red-900/30 text-red-300 line-through opacity-70';
-
-                        return (
-                            <span key={index} className={className}>
-                                {text}
-                            </span>
-                        );
-                    })}
-                    {diffs.length === 0 && <span className="text-muted-foreground italic">No diffs computed yet...</span>}
-                </div>
-            </div>
+            </section>
         </div>
     );
 }
